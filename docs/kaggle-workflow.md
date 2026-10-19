@@ -46,6 +46,8 @@ We will build the actual baseline, training, and comparison notebooks next. They
 
 ## Troubleshooting
 
+- **`ensurepip` failed in an older Cell 2:** re-import the updated GitHub notebook and run all cells. Setup now lives in `scripts/setup_environment.py`, creates the environment with `--without-pip`, and bootstraps a checksum-verified pip wheel without changing the notebook kernel.
+
 - **GitHub file not found:** ensure the new notebook has been pushed to `main`; use its full GitHub URL in the import dialog.
 - **Internet disabled / DNS / connection errors:** enable Kaggle Internet access and complete any account verification Kaggle requests. Retain TLS and checksum verification.
 - **Hugging Face fails:** the tokenizer and model metadata must be reachable. Public access normally needs no token. The notebook stops rather than estimating token lengths.

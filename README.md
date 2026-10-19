@@ -56,11 +56,10 @@ Notebook 01 produces **data-ready** artifacts. It does not evaluate model accura
 
 ## Develop locally
 
-Python 3.10+ is required; Python 3.12 is the reference environment. Use an environment with Internet access to GitHub/raw.githubusercontent.com, PyPI, and huggingface.co.
+Python 3.10+ is required; The environment setup supports system Python installations without `ensurepip`, including Kaggle Python 3.13. Use an environment with Internet access to GitHub/raw.githubusercontent.com, PyPI, and huggingface.co.
 
 ```bash
-python -m venv .venv-data
-.venv-data/bin/python -m pip install -r requirements-data.txt
+python scripts/setup_environment.py --environment .venv-data
 .venv-data/bin/python -m pip check
 python -m unittest discover -s tests -v
 .venv-data/bin/python scripts/prepare_data.py \
