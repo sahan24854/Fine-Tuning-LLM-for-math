@@ -1,6 +1,7 @@
 """Dataset preparation and protocol helpers; standard-library dependencies only."""
 
 import hashlib
+import io
 import json
 import random
 import re
@@ -21,6 +22,22 @@ def write_json(path, value):
 
 def write_jsonl(path, rows):
     Path(path).write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+
+
+def _jsonl_records(lines, source):
+    records = []
+    for line_number, line in enumerate(lines, 1):
+        try:
+            records.append(json.loads(line))
+        except (ValueError, UnicodeDecodeError) as exc:
+            raise ValueError(f"Invalid JSONL in {source}, physical line {line_number}: {exc}") from exc
+    return records
+
+
+def read_jsonl(path):
+    """Read LF-delimited records without splitting valid Unicode inside strings."""
+    with Path(path).open("rb") as file:
+        return _jsonl_records(file, str(path))
 
 
 def question_key(question):
@@ -72,8 +89,7 @@ def download_source(source, cache_dir):
 
 def parse_gsm8k(data, split):
     rows = []
-    for index, line in enumerate(data.decode("utf-8").splitlines()):
-        source = json.loads(line)
+    for index, source in enumerate(_jsonl_records(io.BytesIO(data), "GSM8K source")):
         solution, answer = source["answer"].rsplit("####", 1)
         # Remove calculator annotations, retaining the human-readable calculations.
         solution = re.sub(r"<<.*?>>", "", solution).strip()

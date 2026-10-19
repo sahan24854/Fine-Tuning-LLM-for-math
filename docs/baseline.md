@@ -20,6 +20,8 @@ No source-code copying is necessary. Like Notebook 01, the launcher fetches shar
 
 Bundle discovery follows symlinked input folders (including links to mounts outside `/kaggle/input`) and prevents traversal loops. Renamed ZIP files are recognized by their manifest. If discovery fails, the error lists visible input paths and rejected manifests. After a shared-code fix, rerun the first code cell to fetch the latest commit, then rerun the input-discovery cell; notebook re-import is not needed.
 
+The JSONL reader uses physical newline boundaries. GSM8K includes a question with a literal Unicode line separator (`U+2028`) inside a valid JSON string; using `str.splitlines()` incorrectly splits that record. If an older code revision reports `JSONDecodeError: Unterminated string` after bundle hash verification, fetch the latest code and rerun discovery and the smoke test. Keep the original data bundle. In the same live session, the installed environment from the setup cell can be reused; after restarting, run setup again.
+
 ## What runs
 
 The notebook verifies the data bundle before installing an isolated runtime. The setup uses PyTorch 2.7.1 from the official CUDA 11.8 index and the pinned tokenizer stack from Notebook 01. It runs a CUDA matrix multiplication before downloading model weights. The model then runs in FP16 with eager attention, greedy decoding, and deterministic PyTorch algorithms. TF32 is disabled. These choices are recorded for the later tuned-model comparison.

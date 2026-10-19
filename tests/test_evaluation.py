@@ -130,3 +130,23 @@ class EvaluationTests(unittest.TestCase):
             (Path(tmp) / "gsm8k_test.jsonl").write_text("changed")
             with self.assertRaisesRegex(ValueError, "Checksum"):
                 load_bundle(tmp)
+
+    def test_unicode_line_separator_in_verified_bundle_is_preserved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bundle = fixture_bundle(tmp)
+            path = Path(tmp) / "validation.jsonl"
+            rows = bundle["splits"]["validation"]
+            rows[0]["question"] = "A question\u2028with a Unicode separator\u2029and another\u0085character."
+            write_jsonl(path, rows)
+            manifest = bundle["manifest"]
+            manifest["files_sha256"]["validation.jsonl"] = sha256(path.read_bytes())
+            write_json(Path(tmp) / "manifest.json", manifest)
+            loaded = load_bundle(tmp)
+            self.assertEqual(loaded["splits"]["validation"], rows)
+
+    def test_unicode_in_saved_predictions_does_not_break_resume(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            records = [{"completion": "Solution\u2028continues\u2029here\u0085\nFinal answer: 4"}]
+            path = Path(tmp) / "predictions.jsonl"
+            write_jsonl(path, records)
+            self.assertEqual(read_predictions(path), records)

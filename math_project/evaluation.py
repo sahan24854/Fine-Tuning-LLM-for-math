@@ -5,7 +5,7 @@ import json
 import math
 from pathlib import Path
 
-from math_project.data import extract_final_answer, prompt, sha256
+from math_project.data import extract_final_answer, prompt, read_jsonl, sha256
 from scripts.verify_bundle import verify
 
 TEST_SPLITS = ("gsm8k_test", "svamp_test", "arithmetic_test")
@@ -35,7 +35,7 @@ def load_bundle(path):
     revision = config["model"]["revision"]
     if len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
         raise ValueError("Bundle must pin a full model commit")
-    splits = {name: [json.loads(line) for line in (path / f"{name}.jsonl").read_text().splitlines()]
+    splits = {name: read_jsonl(path / f"{name}.jsonl")
               for name in ("train", "validation", *TEST_SPLITS)}
     for name, rows in splits.items():
         if len(rows) != manifest["counts"][name] or len({r["id"] for r in rows}) != len(rows):
@@ -79,7 +79,7 @@ def read_predictions(path):
     if end != len(data):
         with path.open("r+b") as file:
             file.truncate(end)
-    return [json.loads(line) for line in data[:end].splitlines()]
+    return read_jsonl(path)
 
 
 def validate_records(records, jobs):
