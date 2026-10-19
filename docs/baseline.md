@@ -18,6 +18,8 @@ The baseline measures the untouched `HuggingFaceTB/SmolLM2-360M` model using the
 
 No source-code copying is necessary. Like Notebook 01, the launcher fetches shared code from GitHub. Creating/attaching Kaggle notebooks happens in your signed-in browser.
 
+Bundle discovery follows symlinked input folders (including links to mounts outside `/kaggle/input`) and prevents traversal loops. Renamed ZIP files are recognized by their manifest. If discovery fails, the error lists visible input paths and rejected manifests. After a shared-code fix, rerun the first code cell to fetch the latest commit, then rerun the input-discovery cell; notebook re-import is not needed.
+
 ## What runs
 
 The notebook verifies the data bundle before installing an isolated runtime. The setup uses PyTorch 2.7.1 from the official CUDA 11.8 index and the pinned tokenizer stack from Notebook 01. It runs a CUDA matrix multiplication before downloading model weights. The model then runs in FP16 with eager attention, greedy decoding, and deterministic PyTorch algorithms. TF32 is disabled. These choices are recorded for the later tuned-model comparison.
