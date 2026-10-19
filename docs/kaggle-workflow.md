@@ -42,7 +42,7 @@ To fetch an older code commit in the Kaggle launcher, set `MATH_PROJECT_REF` in 
 
 Save a Kaggle version of Notebook 01 with its outputs. In the future baseline notebook, use **Add Input** to select that saved notebook output (or upload the saved bundle as a private Kaggle dataset). Read it from Kaggle's read-only `/kaggle/input` mount, verify all hashes using `scripts/verify_bundle.py`, then load the pinned model revision and run evaluation. Do not recreate the split or reselect demonstrations.
 
-We will build the actual baseline, training, and comparison notebooks next. They are not included in this milestone.
+The baseline notebook is now available at `notebooks/02_baseline.ipynb`. Follow [the baseline guide](baseline.md). Training and comparison notebooks remain later milestones.
 
 ## Troubleshooting
 

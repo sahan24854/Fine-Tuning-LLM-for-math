@@ -2,6 +2,8 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
+**Next: [Notebook 02: baseline evaluation](notebooks/02_baseline.ipynb)** is available. Import it into Kaggle, enable Internet and a GPU, attach Notebook 01's saved output using Add Input, then run it. See [baseline instructions](docs/baseline.md) for the smoke test, reports, and resuming interrupted runs.
+
 ## Run Notebook 01 on Kaggle
 
 1. Sign into Kaggle and create a notebook at <https://www.kaggle.com/code/new>.
