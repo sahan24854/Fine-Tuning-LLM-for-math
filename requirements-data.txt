@@ -1,0 +1,4 @@
+# Notebook 01 only. No torch, GPU packages, or model weights required.
+transformers==4.57.6
+huggingface-hub==0.36.2
+tokenizers==0.22.2

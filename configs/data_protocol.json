@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "experiment_name": "smollm2-360m-gsm8k-lora-v1",
+  "model": {
+    "id": "HuggingFaceTB/SmolLM2-360M",
+    "revision": "main",
+    "revision_policy": "Resolve once in notebook 01; every subsequent notebook must use config.resolved.json."
+  },
+  "seed": 42,
+  "validation_fraction": 0.1,
+  "arithmetic_per_category": 50,
+  "max_training_tokens": 1024,
+  "context_window_tokens": 2048,
+  "few_shot_count": 3,
+  "demonstration_max_tokens": 160,
+  "generation": {
+    "do_sample": false,
+    "num_beams": 1,
+    "max_new_tokens": 512
+  },
+  "scoring": {
+    "primary_metric": "exact_numeric_final_answer_accuracy",
+    "completion_only": true,
+    "required_marker": "Final answer:",
+    "normalization": "exact rational equality; signed integers, decimals, correctly grouped thousands and fractions; units/prose/multiple markers invalid",
+    "invalid_answers": "count as incorrect; also report invalid rate",
+    "truncated_outputs": "report separately; never exclude from denominator",
+    "aggregate": "report each dataset separately",
+    "uncertainty": "paired bootstrap over identical question IDs; 10000 resamples; 95% CI"
+  },
+  "training_contract": {
+    "objective": "causal_lm_response_only",
+    "input_ids": "encode(prompt, add_special_tokens=False) + encode(completion, add_special_tokens=False) + [eos_token_id]",
+    "labels": "[-100] * len(prompt_ids) + completion_ids_including_eos",
+    "padding_labels": -100,
+    "truncation": "exclude and report overlength training examples; never silently truncate",
+    "checkpoint_selection": "validation only; never select using test accuracy"
+  },
+  "sources": {
+    "gsm8k_train": {
+      "url": "https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/train.jsonl",
+      "sha256": "17f347dc51477c50d4efb83959dbb7c56297aba886e5544ee2aaed3024813465",
+      "bytes": 4166206
+    },
+    "gsm8k_test": {
+      "url": "https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl",
+      "sha256": "3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14",
+      "bytes": 749738
+    },
+    "svamp_test": {
+      "url": "https://raw.githubusercontent.com/arkilpatel/SVAMP/78e727689e1c1bebfc4be39c446898e8e10b0518/SVAMP.json",
+      "sha256": "5be77703a6d891ae476d7c082787ad361392aa02453b132516cdd5f4e7934e3e",
+      "bytes": 339970
+    }
+  }
+}
