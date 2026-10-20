@@ -1,0 +1,12 @@
+{
+  "pilot_id": "math-three-shot-pilot-v2-1",
+  "scope": "development_comparison_previously_inspected_test_sets",
+  "questions_per_dataset": 100,
+  "seed": 42,
+  "mode": "few_shot",
+  "batch_size": 4,
+  "selection": "sha256_rank_seed_split_id; arithmetic stratified equally by number_range and operation",
+  "scoring_protocol_file": "configs/protocol_v2_diagnostic.json",
+  "scoring_protocol_file_sha256": "4d77fba5c341764d1d0a3b5d5f62ce115d20ef25d154a9b7468f33efa3bac1cb",
+  "review_basis": "docs/protocol-v2-review-2026-10-20.md"
+}

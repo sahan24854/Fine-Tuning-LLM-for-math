@@ -2,7 +2,9 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Current step: [Notebook 02b: protocol v2 validation diagnostic](notebooks/02b_protocol_v2_diagnostic.ipynb).** Import it into a new Kaggle notebook, enable Internet and a GPU, and attach Notebook 01's saved output. It runs only **20 scored validation predictions**, shows the raw answers, and ends without a full benchmark or training step. See [the diagnostic guide](docs/protocol-v2-diagnostic.md).
+**Current step: [Notebook 02c: three-shot baseline pilot](notebooks/02c_baseline_pilot.ipynb).** Import it into a new Kaggle notebook, enable Internet and a GPU, and attach the original Notebook 01 saved output. It freezes 100 GSM8K, 100 SVAMP, and 100 arithmetic questions before running **300 predictions** with the reviewed v2 stopping/scoring rules. Save the output ZIP for the later fine-tuned comparison. See [the pilot guide](docs/baseline-pilot.md).
+
+[Notebook 02b](notebooks/02b_protocol_v2_diagnostic.ipynb) remains the small validation diagnostic. [Its reviewed predictions](docs/protocol-v2-review-2026-10-20.md) support the stopping fix while showing remaining model errors. The pilot is a development comparison on previously inspected test sets, not an untouched final holdout.
 
 The executed [Notebook 02: protocol-v1 baseline](notebooks/02_baseline.ipynb) remains preserved as an audit trail. Do not rerun that full benchmark to validate protocol v2.
 
