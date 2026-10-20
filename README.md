@@ -2,7 +2,9 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Next: [Notebook 02: baseline evaluation](notebooks/02_baseline.ipynb)** is available. Import it into Kaggle, enable Internet and a GPU, attach Notebook 01's saved output using Add Input, then run it. See [baseline instructions](docs/baseline.md) for the smoke test, reports, and resuming interrupted runs.
+**Current step: [Notebook 02b: protocol v2 validation diagnostic](notebooks/02b_protocol_v2_diagnostic.ipynb).** Import it into a new Kaggle notebook, enable Internet and a GPU, and attach Notebook 01's saved output. It runs only **20 scored validation predictions**, shows the raw answers, and ends without a full benchmark or training step. See [the diagnostic guide](docs/protocol-v2-diagnostic.md).
+
+The executed [Notebook 02: protocol-v1 baseline](notebooks/02_baseline.ipynb) remains preserved as an audit trail. Do not rerun that full benchmark to validate protocol v2.
 
 **Evaluation audit:** the first full run had 100% length-limited outputs and 98.1% strict-format invalid answers. Read [the findings](docs/baseline-audit-2026-10-20.md) before interpreting the scores or starting training. A completed run is not sufficient evidence of valid measurement. The CLI now checks smoke health before permitting a full run; a CPU-only tool can audit saved predictions without repeating inference.
 

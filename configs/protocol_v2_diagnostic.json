@@ -1,0 +1,113 @@
+{
+  "protocol_id": "math-answer-boundary-v2-diagnostic-1",
+  "scope": "validation_only_development_diagnostic_not_final_benchmark",
+  "validation_questions": 10,
+  "max_validation_questions": 20,
+  "modes": [
+    "zero_shot",
+    "few_shot"
+  ],
+  "batch_size": 4,
+  "prompt_policy": "Reuse protocol-v1 prompts and frozen training demonstrations unchanged; isolate stopping and extraction changes.",
+  "generation": {
+    "max_new_tokens": 512,
+    "do_sample": false,
+    "num_beams": 1
+  },
+  "stopping": {
+    "completed_final_answer_line": "Stop after the first Final answer: line receives a newline; do not stop while a numeric token prefix is incomplete.",
+    "next_question": "Stop before a whitespace-delimited Question: or ### Question: marker in generated text, including inline markers.",
+    "eos": "Use the pinned model EOS IDs; an answer ending at EOS may be parsed without a newline.",
+    "length": "If a final-answer line ends at the token cap without a newline, EOS, or question boundary, classify it as incomplete; do not assume the last digit was complete."
+  },
+  "normalization": {
+    "allowed_currency_prefixes": [
+      "$",
+      "£",
+      "€"
+    ],
+    "allowed_units": [
+      "dollar",
+      "dollars",
+      "cent",
+      "cents",
+      "kg",
+      "kilogram",
+      "kilograms",
+      "gram",
+      "grams",
+      "g",
+      "minute",
+      "minutes",
+      "hour",
+      "hours",
+      "second",
+      "seconds",
+      "day",
+      "days",
+      "week",
+      "weeks",
+      "year",
+      "years",
+      "m",
+      "meter",
+      "meters",
+      "metre",
+      "metres",
+      "cm",
+      "kilometer",
+      "kilometers",
+      "kilometre",
+      "kilometres",
+      "foot",
+      "feet",
+      "ft",
+      "inch",
+      "inches",
+      "liter",
+      "liters",
+      "litre",
+      "litres",
+      "calorie",
+      "calories",
+      "percent",
+      "%",
+      "item",
+      "items",
+      "toy",
+      "toys",
+      "bracelet",
+      "bracelets",
+      "pencil",
+      "pencils",
+      "pair",
+      "pairs",
+      "serving",
+      "servings"
+    ],
+    "wrappers": [
+      "paired **bold**",
+      "paired `code`",
+      "paired $math$",
+      "paired \\(math\\)",
+      "one complete \\boxed{number}"
+    ],
+    "trailing_punctuation": [
+      "."
+    ],
+    "numeric_equality": "Exact rational equality. No rounding, tolerance, unit conversion, reference search, or arbitrary last-number extraction."
+  },
+  "reporting": {
+    "separate_metrics": [
+      "strict_numeric_format_rate",
+      "normalized_answer_parse_rate",
+      "numeric_accuracy_all_questions",
+      "numeric_accuracy_among_parseable_selection_biased"
+    ],
+    "quality_alarms": {
+      "unparseable_fraction_at_least": 0.5,
+      "length_limited_fraction_at_least": 0.5
+    },
+    "review": "Always requires raw validation-output review. Passing alarms does not authorize a full benchmark automatically."
+  }
+}
