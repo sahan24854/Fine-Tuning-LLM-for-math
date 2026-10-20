@@ -12,6 +12,26 @@ TEST_SPLITS = ("gsm8k_test", "svamp_test", "arithmetic_test")
 MODES = ("zero_shot", "few_shot")
 
 
+def smoke_health_issues(summary):
+    """Engineering alarms, not an accuracy threshold or statistical guarantee."""
+    issues = []
+    if summary.get("stage") != "smoke" or not summary.get("complete"):
+        issues.append("Validation smoke run is incomplete or has the wrong stage")
+    groups = summary.get("groups", {})
+    if not groups:
+        issues.append("No validation smoke groups were evaluated")
+    for name, group in groups.items():
+        count = group.get("count", 0)
+        if not count:
+            issues.append(f"{name}: no validation predictions")
+            continue
+        if group.get("invalid_answers", 0) / count >= .5:
+            issues.append(f"{name}: {group['invalid_answers']}/{count} answers are unparseable under the output contract")
+        if group.get("length_limited_answers", 0) / count >= .8:
+            issues.append(f"{name}: {group['length_limited_answers']}/{count} answers hit the generation cap")
+    return issues
+
+
 def atomic_json(path, value):
     path = Path(path)
     temporary = path.with_suffix(path.suffix + ".tmp")

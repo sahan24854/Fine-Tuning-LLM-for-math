@@ -28,6 +28,8 @@ The notebook verifies the data bundle before installing an isolated runtime. The
 
 The smoke test evaluates 20 validation examples in each prompt mode (40 predictions). It is a functional and throughput check; it is not a benchmark score and does not need to achieve a particular accuracy to pass. An unscored validation warmup precedes measurement.
 
+The first completed run exposed a protocol problem: all outputs hit the generation cap and almost all were rejected by the strict format parser. Read [the audit](baseline-audit-2026-10-20.md) before interpreting its accuracy. The full CLI now blocks when a smoke group has at least 50% invalid or at least 80% length-limited answers. These engineering alarms require investigation of validation completions; increasing the cap alone is not a justified fix. Existing scores are preserved.
+
 The full run evaluates:
 
 | Benchmark | Questions | Modes | Predictions |

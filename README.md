@@ -4,6 +4,8 @@ Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths 
 
 **Next: [Notebook 02: baseline evaluation](notebooks/02_baseline.ipynb)** is available. Import it into Kaggle, enable Internet and a GPU, attach Notebook 01's saved output using Add Input, then run it. See [baseline instructions](docs/baseline.md) for the smoke test, reports, and resuming interrupted runs.
 
+**Evaluation audit:** the first full run had 100% length-limited outputs and 98.1% strict-format invalid answers. Read [the findings](docs/baseline-audit-2026-10-20.md) before interpreting the scores or starting training. A completed run is not sufficient evidence of valid measurement. The CLI now checks smoke health before permitting a full run; a CPU-only tool can audit saved predictions without repeating inference.
+
 ## Run Notebook 01 on Kaggle
 
 1. Sign into Kaggle and create a notebook at <https://www.kaggle.com/code/new>.

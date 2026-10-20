@@ -56,7 +56,7 @@ class InferenceTests(unittest.TestCase):
             self.assertEqual([r["generated_tokens"] for r in outputs], [2, 3])
             self.assertEqual([r["finish_reason"] for r in outputs], ["eos", "eos"])
 
-    def test_real_model_load_through_smoke_and_full_cli(self):
+    def test_real_model_smoke_and_guard_against_unhealthy_full_run(self):
         from math_project.data import sha256, write_json
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -80,7 +80,11 @@ class InferenceTests(unittest.TestCase):
                 if stage == "full":
                     command += ["--smoke-output", str(root / "smoke")]
                 result = subprocess.run(command, text=True, capture_output=True)
-                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            summary = json.loads((root / "full/summary.json").read_text())
+                if stage == "smoke":
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                else:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("Full benchmark blocked by validation smoke health checks", result.stderr)
+            summary = json.loads((root / "smoke/summary.json").read_text())
             self.assertTrue(summary["complete"])
-            self.assertEqual(summary["completed_predictions"], 12)
+            self.assertFalse((root / "full").exists())

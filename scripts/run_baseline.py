@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from math_project.data import extract_final_answer, sha256
-from math_project.evaluation import atomic_json, load_bundle, make_jobs, read_predictions, validate_records, write_reports
+from math_project.evaluation import atomic_json, load_bundle, make_jobs, read_predictions, smoke_health_issues, validate_records, write_reports
 
 
 def code_identity():
@@ -150,6 +150,11 @@ def main():
         packages = sorted(f"{d.metadata['Name']}=={d.version}" for d in importlib.metadata.distributions())
         if smoke_id["packages_sha256"] != sha256("\n".join(packages).encode()):
             raise ValueError("Installed packages changed since smoke test; use a consistent environment")
+        issues = smoke_health_issues(smoke)
+        if issues:
+            raise ValueError("Full benchmark blocked by validation smoke health checks:\n" +
+                             "\n".join(issues) + "\nInspect saved validation completions and termination before running a full benchmark. "
+                             "These alarms do not prove the generation budget is too small; do not simply increase it.")
     from math_project.inference import load_runner
     runner, runtime = load_runner(bundle, args.device)
     if args.stage == "full" and smoke_id["runtime"] != runtime:
