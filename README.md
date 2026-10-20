@@ -4,6 +4,8 @@ Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths 
 
 **Current step: [Notebook 04: paired comparison](notebooks/04_paired_comparison.ipynb).** Import it into a new Kaggle notebook, enable Internet and a T4, and attach the saved outputs from Notebook 01, Notebook 02c, and Notebook 03. It verifies the original artifacts, generates 300 adapter answers on the saved pilot questions, and compares accuracy, formatting, paired changes, and exploratory arithmetic evidence. See [the comparison guide](docs/paired-comparison.md).
 
+**Completed comparison:** Notebook 04 ran successfully. Official accuracy changed from 5% to 8% on GSM8K, 20% to 12% on SVAMP, and 4% to 54% on arithmetic. The exploratory arithmetic answer-evidence count changed from 51 to 54, showing that much of the official arithmetic gain reflects better answer formatting. Read [the comparison review](docs/comparison-review-2026-10-21.md) before claiming improved maths ability.
+
 The executed [Notebook 03](notebooks/03_lora_training.ipynb) completed all 633 updates. [Its training review](docs/training-review-2026-10-20.md) records validation loss decreasing from 1.040 to 0.708; this is not yet evidence of a generated-answer accuracy gain. Keep the full training ZIP and selected adapter.
 
 The executed [Notebook 02c: three-shot pilot](notebooks/02c_baseline_pilot.ipynb) is preserved with outputs. Its 300 predictions are the development baseline for the later paired comparison. Read [the pilot review](docs/pilot-review-2026-10-20.md): missing answer labels hide many correct arithmetic equations, so improved format compliance must be distinguished from improved maths. Keep its complete Kaggle output ZIP.
