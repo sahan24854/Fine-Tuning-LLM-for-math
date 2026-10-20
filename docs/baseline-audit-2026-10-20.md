@@ -54,3 +54,21 @@ python scripts/audit_baseline.py --run /path/to/baseline/smoke \
 Run the same command against `full` for post-hoc test diagnostics. The tool checks original result hashes, recomputes strict scores, counts missing/multiple/unparseable labels and next-question continuations, and saves stable completion samples. First-problem first-label counts are explicitly exploratory diagnostics, not replacement primary accuracy.
 
 The next experiment should be a small validation-only diagnostic with verified answer extraction and termination. A versioned revised protocol can then be frozen and applied consistently to baseline and tuned models. The full benchmark should wait until that protocol passes a meaningful smoke review.
+
+## Follow-up: supplied raw predictions
+
+The user subsequently supplied all 40 validation smoke records and a pasted excerpt of the full predictions: 313 complete GSM8K zero-shot records, followed by a truncated record. This excerpt does not cover the other full-run modes/datasets. No original result manifests were supplied with these pasted files.
+
+| Supplied group | Records | Capped at 512 | Strictly invalid | No final label | Multiple final labels | Next-question marker |
+|---|---:|---:|---:|---:|---:|---:|
+| Validation zero-shot | 20 | 20 | 20 | 18 | 2 | 11 |
+| Validation three-shot | 20 | 20 | 19 | 5 | 14 | 15 |
+| GSM8K zero-shot excerpt | 313 | 313 | 313 | 292 | 18 | 177 |
+
+The next-question counts detect newline-prefixed `Question:` markers. Some outputs introduce new questions inline, so these counts are not exhaustive. All 353 complete supplied records reproduce their stored strict scores. All reference answers match the pinned GSM8K source by ID, and all 333 zero-shot prompt hashes match reconstructed prompts. Three-shot hashes were not reconstructed without the saved demonstrations/tokenizer bundle.
+
+The anticipated scoring/termination failure is now observed in real validation data: item `gsm8k/train/07224` in three-shot mode computes `200 + 250 + 100 = 550`, writes `Final answer: 550`, then continues with repeated unrelated bank-account problems and more final-answer lines. The original strict parser marks the record invalid. The correct target answer was already present before the cap.
+
+Real mathematical errors are also visible before continuation. A $30 manicure plus a 30% tip is answered as $9 rather than the $39 total. A question involving three weekly 200 kg collections followed by a week at half that amount is answered as 300 rather than 900 kg. Other outputs enumerate empty steps or repeat facts/calculations instead of progressing toward a solution.
+
+These observations do not support raising the token budget as the primary remedy. They support a small validation-only protocol revision addressing answer boundaries, strict-format confounding, and repetition. They do not prove that no individual question could benefit from more tokens. The one initially correct labelled validation answer is an exploratory diagnostic finding, not an automatically revised benchmark accuracy.
