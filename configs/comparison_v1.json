@@ -1,0 +1,11 @@
+{
+  "comparison_id": "smollm2-paired-pilot-lora-1",
+  "scope": "development_comparison_previously_inspected_test_sets",
+  "paired_bootstrap_resamples": 10000,
+  "bootstrap_seed": 42,
+  "confidence_level": 0.95,
+  "arithmetic_bootstrap": "resample within each original number_range/operation stratum",
+  "supplementary_audit_id": "single-arithmetic-equation-evidence-1",
+  "supplementary_rule": "Exploratory only. Keep official correct answers; additionally accept a complete target containing only a single integer equation a op b = signed_integer, with operands/operator exactly matching What is a op b?. Reject generation-cap targets. No arbitrary last-number or reference search.",
+  "timing_policy": "Report generated tokens and descriptive generation times; no controlled speed or end-to-end latency claim."
+}

@@ -2,7 +2,9 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Current step: [Notebook 03: LoRA training](notebooks/03_lora_training.ipynb).** Import it into a new Kaggle notebook, enable Internet and a T4 GPU, and attach the original Notebook 01 saved output. It audits response-only tokenization, runs a two-update smoke check, then trains for three epochs and selects an adapter using validation loss. See [the training guide](docs/lora-training.md).
+**Current step: [Notebook 04: paired comparison](notebooks/04_paired_comparison.ipynb).** Import it into a new Kaggle notebook, enable Internet and a T4, and attach the saved outputs from Notebook 01, Notebook 02c, and Notebook 03. It verifies the original artifacts, generates 300 adapter answers on the saved pilot questions, and compares accuracy, formatting, paired changes, and exploratory arithmetic evidence. See [the comparison guide](docs/paired-comparison.md).
+
+The executed [Notebook 03](notebooks/03_lora_training.ipynb) completed all 633 updates. [Its training review](docs/training-review-2026-10-20.md) records validation loss decreasing from 1.040 to 0.708; this is not yet evidence of a generated-answer accuracy gain. Keep the full training ZIP and selected adapter.
 
 The executed [Notebook 02c: three-shot pilot](notebooks/02c_baseline_pilot.ipynb) is preserved with outputs. Its 300 predictions are the development baseline for the later paired comparison. Read [the pilot review](docs/pilot-review-2026-10-20.md): missing answer labels hide many correct arithmetic equations, so improved format compliance must be distinguished from improved maths. Keep its complete Kaggle output ZIP.
 

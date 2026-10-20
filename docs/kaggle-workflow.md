@@ -42,7 +42,7 @@ To fetch an older code commit in the Kaggle launcher, set `MATH_PROJECT_REF` in 
 
 Save a Kaggle version of Notebook 01 with its outputs. In the future baseline notebook, use **Add Input** to select that saved notebook output (or upload the saved bundle as a private Kaggle dataset). Read it from Kaggle's read-only `/kaggle/input` mount, verify all hashes using `scripts/verify_bundle.py`, then load the pinned model revision and run evaluation. Do not recreate the split or reselect demonstrations.
 
-The completed baseline pilot is `notebooks/02c_baseline_pilot.ipynb`; retain its saved output. The current step is `notebooks/03_lora_training.ipynb`: attach the original Notebook 01 output, enable Internet and a T4, and follow [the training guide](lora-training.md). Paired comparison is the next milestone. The original executed `notebooks/02_baseline.ipynb` is preserved for the audit trail; its full run should not be repeated. Because the original test outcomes have already been inspected, the pilot is a development comparison.
+The baseline pilot `notebooks/02c_baseline_pilot.ipynb` and training `notebooks/03_lora_training.ipynb` are complete; retain both saved outputs. The current step is `notebooks/04_paired_comparison.ipynb`: attach the saved outputs of Notebook 01, 02c, and 03, enable Internet and a T4, and follow [the comparison guide](paired-comparison.md). The original executed `notebooks/02_baseline.ipynb` is preserved for the audit trail; its full run should not be repeated. Because the original test outcomes have already been inspected, the pilot is a development comparison.
 
 ## Troubleshooting
 
