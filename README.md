@@ -2,7 +2,9 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Current step: [Notebook 02c: three-shot baseline pilot](notebooks/02c_baseline_pilot.ipynb).** Import it into a new Kaggle notebook, enable Internet and a GPU, and attach the original Notebook 01 saved output. It freezes 100 GSM8K, 100 SVAMP, and 100 arithmetic questions before running **300 predictions** with the reviewed v2 stopping/scoring rules. Save the output ZIP for the later fine-tuned comparison. See [the pilot guide](docs/baseline-pilot.md).
+**Current step: [Notebook 03: LoRA training](notebooks/03_lora_training.ipynb).** Import it into a new Kaggle notebook, enable Internet and a T4 GPU, and attach the original Notebook 01 saved output. It audits response-only tokenization, runs a two-update smoke check, then trains for three epochs and selects an adapter using validation loss. See [the training guide](docs/lora-training.md).
+
+The executed [Notebook 02c: three-shot pilot](notebooks/02c_baseline_pilot.ipynb) is preserved with outputs. Its 300 predictions are the development baseline for the later paired comparison. Read [the pilot review](docs/pilot-review-2026-10-20.md): missing answer labels hide many correct arithmetic equations, so improved format compliance must be distinguished from improved maths. Keep its complete Kaggle output ZIP.
 
 [Notebook 02b](notebooks/02b_protocol_v2_diagnostic.ipynb) remains the small validation diagnostic. [Its reviewed predictions](docs/protocol-v2-review-2026-10-20.md) support the stopping fix while showing remaining model errors. The pilot is a development comparison on previously inspected test sets, not an untouched final holdout.
 

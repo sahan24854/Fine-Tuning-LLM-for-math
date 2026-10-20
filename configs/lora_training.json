@@ -1,0 +1,30 @@
+{
+  "training_id": "smollm2-360m-gsm8k-response-lora-1",
+  "seed": 42,
+  "epochs": 3,
+  "learning_rate": 0.0002,
+  "micro_batch_size": 4,
+  "gradient_accumulation_steps": 8,
+  "eval_batch_size": 4,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.03,
+  "max_grad_norm": 1.0,
+  "max_sequence_tokens": 1024,
+  "checkpoint_every_updates": 100,
+  "gradient_checkpointing": true,
+  "lora": {
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "bias": "none"
+  },
+  "objective": "causal_lm_response_only_with_eos",
+  "checkpoint_selection": "lowest_validation_response_token_nll",
+  "validation_prompt": "zero_shot_teacher_forcing_same_format_as_training",
+  "smoke": {
+    "train_rows": 64,
+    "validation_rows": 16,
+    "max_updates": 2
+  }
+}

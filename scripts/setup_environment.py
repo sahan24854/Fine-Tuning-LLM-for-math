@@ -1,4 +1,4 @@
-"""Create isolated data or baseline environments without ensurepip or host pip."""
+"""Create isolated data, baseline, or training environments without ensurepip."""
 
 import argparse
 import hashlib
@@ -26,6 +26,8 @@ def download_pip(directory):
 
 
 def setup(environment, profile="data", torch_variant="cu118"):
+    if profile not in ("data", "baseline", "training"):
+        raise ValueError("Unknown environment profile")
     environment = Path(environment).resolve()
     if environment.exists() and any(environment.iterdir()):
         raise ValueError("Use a new, empty environment directory; existing environments are not overwritten")
@@ -41,10 +43,13 @@ def setup(environment, profile="data", torch_variant="cu118"):
                         "--disable-pip-version-check", "--no-index", "--no-deps", str(wheel)], check=True)
     subprocess.run([str(python), "-I", "-m", "pip", "install", "--disable-pip-version-check",
                     "-r", str(ROOT / "requirements-data.txt")], check=True)
-    if profile == "baseline":
+    if profile in ("baseline", "training"):
         subprocess.run([str(python), "-I", "-m", "pip", "install", "--disable-pip-version-check",
                         "--index-url", f"https://download.pytorch.org/whl/{torch_variant}",
                         f"torch==2.7.1+{torch_variant}"], check=True)
+    if profile == "training":
+        subprocess.run([str(python), "-I", "-m", "pip", "install", "--disable-pip-version-check",
+                        "-r", str(ROOT / "requirements-training.txt")], check=True)
     subprocess.run([str(python), "-I", "-m", "pip", "check"], check=True)
     print(f"Environment ready: {python}", flush=True)
     return python
@@ -53,7 +58,7 @@ def setup(environment, profile="data", torch_variant="cu118"):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--environment", type=Path, required=True)
-    parser.add_argument("--profile", choices=["data", "baseline"], default="data")
+    parser.add_argument("--profile", choices=["data", "baseline", "training"], default="data")
     parser.add_argument("--torch-variant", choices=["cu118", "cpu"], default="cu118")
     args = parser.parse_args()
     setup(args.environment, args.profile, args.torch_variant)
