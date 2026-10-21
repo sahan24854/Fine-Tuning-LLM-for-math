@@ -21,6 +21,9 @@ from math_project.training import (ResponseCollator, datasets_for_training, resp
 
 SOURCE_FILES = ["math_project/data.py", "math_project/evaluation.py", "math_project/inference.py",
                 "math_project/training.py", "scripts/train_lora.py", "scripts/verify_bundle.py"]
+MONITOR_SOURCES = ["math_project/training_monitor.py", "math_project/inference_v2.py",
+    "math_project/protocol_v2.py", "math_project/validation_analysis.py", "math_project/pilot.py",
+    "math_project/comparison.py", "configs/validation_analysis.json", "configs/protocol_v2_diagnostic.json"]
 
 
 def file_hashes(directory, exclude=()):
@@ -69,7 +72,7 @@ def run_training(bundle, base, runtime, config, output, stage, smoke_output=None
         "packages_sha256": sha256("\n".join(packages).encode()),
         "data_audit_sha256": sha256(json.dumps(audit, sort_keys=True).encode()),
         "code_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-        "code_files_sha256": {name: sha256((ROOT/name).read_bytes()) for name in SOURCE_FILES}}
+        "code_files_sha256": {name: sha256((ROOT/name).read_bytes()) for name in SOURCE_FILES + (MONITOR_SOURCES if "generated_validation" in config else [])}}
     if stage == "full":
         if smoke_output is None:
             raise ValueError("Full training requires --smoke-output")
@@ -132,8 +135,28 @@ def run_training(bundle, base, runtime, config, output, stage, smoke_output=None
         if args.world_size != 1 or args.n_gpu > 1:
             raise ValueError("This first experiment supports one process and one visible GPU")
 
+        monitor = None
+        if "generated_validation" in config:
+            from math_project.training_monitor import GenerationMonitor
+            monitor = GenerationMonitor(bundle, base, output, stage, config["generated_validation"])
+
         class CheckpointContract(TrainerCallback):
+            measured_step = None
+
+            def observe_epoch(self, state, model):
+                if monitor is not None and self.measured_step != state.global_step:
+                    monitor.measure(model, f"epoch-step-{state.global_step}", state.global_step, state.epoch)
+                    self.measured_step = state.global_step
+
+            def on_step_end(self, args, state, control, **kwargs):
+                # A scheduled save may occur before on_epoch_end. Observe first
+                # so a resume from that checkpoint cannot skip the epoch result.
+                if state.epoch and math.isclose(state.epoch, round(state.epoch), abs_tol=1e-9):
+                    self.observe_epoch(state, kwargs["model"])
+                return control
+
             def on_epoch_end(self, args, state, control, **kwargs):
+                self.observe_epoch(state, kwargs["model"])
                 # Include the final model and epoch boundaries in selection, even
                 # when total updates do not divide the checkpoint interval.
                 if not any(row.get("step") == state.global_step and "eval_loss" in row
@@ -157,8 +180,14 @@ def run_training(bundle, base, runtime, config, output, stage, smoke_output=None
         else:
             base_validation = trainer.evaluate(metric_key_prefix="base_validation")
             atomic_json(base_path, base_validation)
+        if monitor is not None and not (monitor.output/"base.json").exists():
+            if previous:
+                raise ValueError("Cannot resume monitored training without original base observations")
+            monitor.measure(model, "base", 0, 0)
         result = trainer.train(resume_from_checkpoint=previous)
         selected = trainer.evaluate(metric_key_prefix="selected_validation")
+        if monitor is not None:
+            monitor.measure(model, "selected", int(Path(trainer.state.best_model_checkpoint).name.split("-")[-1]), None)
         changed = any(not torch.equal(initial[name], value.detach().cpu()) for name, value in trainable.items())
         finite = all(bool(torch.isfinite(value).all()) for value in trainable.values())
         if not changed or not finite or not math.isfinite(result.training_loss):
@@ -184,6 +213,9 @@ def run_training(bundle, base, runtime, config, output, stage, smoke_output=None
             "adapter_parameters_changed": changed, "effective_batch_size": audit["effective_batch_size"],
             "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if cuda else None,
             "interpretation": "Validation teacher-forced response loss selects a checkpoint; it is not generated maths accuracy. The smoke adapter is only an engineering check. Test accuracy and paired pilot comparison belong to a later notebook."}
+        if monitor is not None:
+            summary["generated_validation"] = {p.stem: {k:v for k,v in json.loads(p.read_text()).items() if k != "predictions"}
+                for p in sorted(monitor.output.glob("*.json")) if p.name != "identity.json"}
         atomic_json(output/"summary.json", summary)
         document = "<!doctype html><meta charset='utf-8'><title>LoRA training</title><style>body{font:16px system-ui;max-width:1000px;margin:2em auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>"
         document += f"<h1>LoRA training — {stage}</h1><p>"+html.escape(summary["interpretation"])+"</p><pre>"+html.escape(json.dumps(summary, indent=2))+"</pre>"
@@ -191,7 +223,10 @@ def run_training(bundle, base, runtime, config, output, stage, smoke_output=None
         for row in history:
             if "eval_loss" in row:
                 document += f"<tr><td>{row['step']}</td><td>{row.get('epoch')}</td><td>{row['eval_loss']:.6f}</td></tr>"
-        (output/"report.html").write_text(document+"</table>", encoding="utf-8")
+        document += "</table>"
+        if monitor is not None:
+            document += "<h2>Generated validation (observation only)</h2><pre>"+html.escape(json.dumps(summary["generated_validation"], indent=2))+"</pre>"
+        (output/"report.html").write_text(document, encoding="utf-8")
         atomic_json(output/"result_manifest.json", {"status": f"{stage}_training_complete",
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "files_sha256": file_hashes(output, exclude=(".training.lock", "result_manifest.json"))})

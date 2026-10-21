@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.find_bundle import scan_input
 
-STATUSES = {"pilot": "pilot_complete", "training": "full_training_complete"}
+STATUSES = {"pilot": "pilot_complete", "training": "full_training_complete", "validation": "validation_analysis_complete"}
 
 
 def unpack_results(path):
@@ -42,6 +42,8 @@ def contains_result(path, status):
 
 def find_result(root, kind):
     status = STATUSES[kind]
+    variable = {"pilot": "BASELINE", "training": "TRAINING", "validation": "VALIDATION"}[kind]
+    notebook = {"pilot": "Notebook 02c", "training": "Notebook 03", "validation": "Notebook 05"}[kind]
     root = Path(root)
     if root.is_file():
         root = unpack_results(root) if root.suffix.lower() == ".zip" else root.parent
@@ -60,13 +62,13 @@ def find_result(root, kind):
     if len(candidates) == 1:
         return next(iter(candidates.values()))
     if len(candidates) > 1:
-        raise ValueError(f"Multiple {kind} results found. Set MATH_{'BASELINE' if kind == 'pilot' else 'TRAINING'}_PATH explicitly: {list(candidates.values())}")
+        raise ValueError(f"Multiple {kind} results found. Set MATH_{variable}_PATH explicitly: {list(candidates.values())}")
     archives = sorted({p.resolve() for p in files if p.suffix.lower() == ".zip" and contains_result(p, status)})
     if len(archives) == 1:
         return find_result(unpack_results(archives[0]), kind)
     if len(archives) > 1:
         raise ValueError(f"Multiple {kind} ZIPs found; select one explicit input path: {archives}")
-    raise ValueError(f"No completed {kind} result found under {root}. Attach the saved {'Notebook 02c' if kind == 'pilot' else 'Notebook 03'} output, including its manifest. Visible paths: {sample}")
+    raise ValueError(f"No completed {kind} result found under {root}. Attach the saved {notebook} output, including its manifest. Visible paths: {sample}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,52 @@
+{
+  "training_id": "smollm2-360m-gsm8k-response-lora-lr5e5-monitor-1",
+  "seed": 42,
+  "epochs": 3,
+  "learning_rate": 5e-05,
+  "micro_batch_size": 4,
+  "gradient_accumulation_steps": 8,
+  "eval_batch_size": 4,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.03,
+  "max_grad_norm": 1.0,
+  "max_sequence_tokens": 1024,
+  "checkpoint_every_updates": 100,
+  "gradient_checkpointing": true,
+  "lora": {
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "bias": "none"
+  },
+  "objective": "causal_lm_response_only_with_eos",
+  "checkpoint_selection": "lowest_validation_response_token_nll",
+  "validation_prompt": "zero_shot_teacher_forcing_same_format_as_training",
+  "smoke": {
+    "train_rows": 64,
+    "validation_rows": 16,
+    "max_updates": 2
+  },
+  "generated_validation": {
+    "analysis_id": "gsm8k-validation-error-analysis-1",
+    "scope": "validation_only_development_not_final_test",
+    "questions": 50,
+    "max_questions": 50,
+    "seed": 42,
+    "modes": [
+      "zero_shot",
+      "few_shot"
+    ],
+    "batch_size": 4,
+    "scoring_protocol_file": "configs/protocol_v2_diagnostic.json",
+    "scoring_protocol_file_sha256": "4d77fba5c341764d1d0a3b5d5f62ce115d20ef25d154a9b7468f33efa3bac1cb",
+    "selection": "Lowest SHA-256 ranks of seed and original validation ID, without inspecting correctness.",
+    "interpretation": "These questions were excluded from gradient training but used for validation-loss checkpoint selection. This is development diagnosis, not an untouched holdout.",
+    "automatic_flags": "Formatting, cap hits, repetition, and exact numeric equality checks on whole lines only. Reasoning categories require human review. No answer repair or rescoring."
+  }
+}

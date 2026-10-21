@@ -9,6 +9,12 @@ def validate_config(config):
             config["checkpoint_selection"] != "lowest_validation_response_token_nll" or
             config["validation_prompt"] != "zero_shot_teacher_forcing_same_format_as_training"):
         raise ValueError("Unsupported training or selection contract")
+    if "generated_validation" in config:
+        from math_project.validation_analysis import load_config
+        from pathlib import Path
+        expected, _ = load_config(Path(__file__).resolve().parents[1]/"configs/validation_analysis.json")
+        if config["generated_validation"] != expected:
+            raise ValueError("Unsupported generated-validation contract")
     for name in ("epochs", "micro_batch_size", "gradient_accumulation_steps", "eval_batch_size",
                  "max_sequence_tokens", "checkpoint_every_updates"):
         if type(config[name]) is not int or config[name] <= 0:
