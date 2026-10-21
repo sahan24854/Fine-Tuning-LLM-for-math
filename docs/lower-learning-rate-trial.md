@@ -30,3 +30,21 @@ Epoch metrics never affect training, early stopping, or checkpoint selection. Th
 Review correctness, parseability, gains/regressions, repetition, and cap hits together. The repeated original-model completions should match Notebook 05; nonzero `base_completion_differences` calls for investigation. Runtime checks are enforced, but this is not a multi-seed causal study. One question changes accuracy by two percentage points; a tiny gain is inconclusive. These validation questions already informed development and loss selection, so they are not an untouched final holdout.
 
 Do not automatically run the old test pilot to pick settings. Preserve earlier official scores. If learning-rate changes do not address the setup/calculation weaknesses, the next separate experiment should add checked, balanced training examples with held-out wording templates. Dataset changes, LoRA capacity changes, and generated-accuracy checkpoint selection remain separate future experiments.
+
+## Recover the original Notebook 06 final-cell metadata error
+
+The initial comparison mistakenly compared the full Notebook 05 inference identity
+against Notebook 06's smaller training-runtime identity. `model_eos_ids` (and other
+inference-only fields) was absent, not proven different. The corrected comparison
+requires identical core runtime field sets and values. It explicitly reports that
+legacy training artifacts do not independently establish EOS/padding/adapter-runtime
+equality; model revision, original tokenizer bundle, frozen sources, scoring,
+prompts, and saved prediction checks remain enforced.
+
+In the still-running Kaggle session, fetch `main` and replace only
+`scripts/compare_training_trial.py` from `FETCH_HEAD`, then rerun the final cell.
+Do not rerun training or replace its source files: the saved training identity
+pins their hashes. This repair changes report generation only and preserves the
+existing adapter, predictions, and manifests. If the session has ended, retain or
+attach its saved output before starting recovery; the old `/kaggle/working` path
+may no longer exist. The comparison requires no GPU or new model generation.

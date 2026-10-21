@@ -47,6 +47,21 @@ def load_control(bundle, previous):
     return config, scoring, [j for j in jobs if j['mode'] == 'few_shot'], records, fingerprint
 
 
+
+def verify_trial_runtime(saved, training_runtime):
+    """Compare matching schemas; retain explicit limits for legacy training artifacts."""
+    inference_only = {"model_eos_ids", "pad_token_id", "tokenizer_eos_id", "stopping", "adapter_runtime"}
+    common = {k:v for k,v in saved.items() if k not in inference_only}
+    if set(common) != set(training_runtime):
+        raise ValueError("Training/inference core runtime fields differ")
+    verify_runtime(common, training_runtime)
+    if "stopping" in saved and saved["stopping"] != "protocol_v2_per_sequence":
+        raise ValueError("Unsupported historical stopping protocol")
+    return {"core_runtime_verified": sorted(common),
+        "inference_only_fields_not_recorded_by_training": sorted(set(saved) & inference_only),
+        "limitation": "Legacy training identity does not record inference-only EOS/padding IDs or adapter runtime. Their runtime equality is not independently verified. Model revision, tokenizer bundle, evaluator/training source hashes, scoring and prompts are checked separately."}
+
+
 def compare(bundle, training, previous, output):
     config, scoring, jobs, old, control_sha = load_control(bundle, previous)
     candidate = verify_training(bundle, training)
@@ -58,8 +73,9 @@ def compare(bundle, training, previous, output):
     for name, digest in identity['code_files_sha256'].items():
         if sha256((ROOT/name).read_bytes()) != digest:
             raise ValueError(f'Candidate training source differs: {name}')
-    for role in ('base', 'tuned'):
-        verify_runtime(json.loads((Path(previous)/role/'identity.json').read_text())['runtime'], identity['runtime'])
+    runtime_checks = {role: verify_trial_runtime(
+        json.loads((Path(previous)/role/'identity.json').read_text())['runtime'], identity['runtime'])
+        for role in ('base', 'tuned')}
     monitor_identity = json.loads((training/"generated_validation/identity.json").read_text())
     expected_selection = [{"key":j["key"], "prompt_sha256":j["prompt_sha256"],
         "reference_answer":j["row"]["answer_canonical"]} for j in jobs]
@@ -82,6 +98,8 @@ def compare(bundle, training, previous, output):
     result = {'scope': config['scope'], 'execution_complete': True,
         'control_validation_artifact_sha256': control_sha,
         'candidate_training_artifact_sha256': candidate['fingerprint'],
+        'runtime_verification': runtime_checks,
+        'comparison_script_sha256': sha256(Path(__file__).read_bytes()),
         'groups': {name: group_metrics(rows, len(jobs)) for name, rows in
                    [('original', old['base']), ('first_adapter', old['tuned']), ('lower_lr_adapter', monitored['selected'])]},
         'paired_vs_first_adapter': paired_counts(old['tuned'], monitored['selected']),

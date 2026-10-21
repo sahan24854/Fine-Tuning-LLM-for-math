@@ -40,7 +40,10 @@ class TrialTests(unittest.TestCase):
         for role in ('base','tuned'):
             (previous/role).mkdir()
             write_jsonl(previous/role/'predictions.jsonl',records)
-            write_json(previous/role/'identity.json',{'role':role,'runtime':{'fixture':'cpu'},
+            write_json(previous/role/'identity.json',{'role':role,'runtime':{'fixture':'cpu',
+                'model_eos_ids':[2], 'pad_token_id':2, 'tokenizer_eos_id':2,
+                'stopping':'protocol_v2_per_sequence',
+                **({'adapter_runtime':{'peft':'0.17.1','merged':False,'parameter_dtypes':['torch.float32']}} if role=='tuned' else {})},
                 'analysis_identity_sha256':sha256(json.dumps(identity,sort_keys=True).encode())})
         write_json(previous/'result_manifest.json',{'status':'validation_analysis_complete',
             'files_sha256':file_hashes(previous)})
@@ -70,6 +73,20 @@ class TrialTests(unittest.TestCase):
                 data=json.loads(path.read_text());data['predictions'][0]['correct']=False;write_json(path,data)
                 with self.assertRaisesRegex(ValueError,'score or metadata'):
                     compare(bundle,training,previous,root/'bad')
+
+    def test_runtime_schema_difference_is_not_a_value_mismatch(self):
+        from scripts.compare_training_trial import verify_trial_runtime
+        saved = {'torch':'2.7.1', 'hardware':'T4', 'model_eos_ids':[0],
+            'stopping':'protocol_v2_per_sequence', 'adapter_runtime':{'merged':False}}
+        current = {'torch':'2.7.1','hardware':'T4'}
+        report = verify_trial_runtime(saved,current)
+        self.assertIn('model_eos_ids',report['inference_only_fields_not_recorded_by_training'])
+        with self.assertRaisesRegex(ValueError,'runtime differs'):
+            verify_trial_runtime(saved,{**current,'torch':'changed'})
+        with self.assertRaisesRegex(ValueError,'fields differ'):
+            verify_trial_runtime(saved,{'torch':'2.7.1'})
+        with self.assertRaisesRegex(ValueError,'stopping'):
+            verify_trial_runtime({**saved,'stopping':'other'},current)
 
     def test_control_checksums_and_first_adapter_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
