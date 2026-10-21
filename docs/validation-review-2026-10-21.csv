@@ -1,0 +1,51 @@
+model,mode,question_id,official_correct,manual_review_category,review_note
+tuned,few_shot,gsm8k/train/06728,False,mixed_arithmetic_and_reasoning,Mixes Michael's and his brother's balances; also states 42 - 21 - 3 = 17.
+tuned,few_shot,gsm8k/train/00408,True,correct_final_answer,Correct weight calculation and remaining elevator capacity.
+tuned,few_shot,gsm8k/train/03989,False,wrong_operation_or_quantity,Treats 30 percent as a class size and confuses gift-card count with money.
+tuned,few_shot,gsm8k/train/01474,False,wrong_operation_or_quantity,Uses differences and divides by two instead of averaging all three weeks.
+tuned,few_shot,gsm8k/train/04244,False,wrong_operation_or_quantity,Does not reconstruct Mary from Ray and then John from Mary.
+tuned,few_shot,gsm8k/train/03048,False,wrong_operation_or_quantity,Treats percentages as counts and does not apply sequential remaining fractions.
+tuned,few_shot,gsm8k/train/00934,True,correct_final_answer,Correct final total; misnames the person receiving the larger share.
+tuned,few_shot,gsm8k/train/00056,False,wrong_operation_or_quantity,Changes the given first-part time and uses the wrong relation for the third part.
+tuned,few_shot,gsm8k/train/01700,False,wrong_operation_or_quantity,Applies loan interest to car price and omits the correct total-payment construction.
+tuned,few_shot,gsm8k/train/00119,False,wrong_operation_or_quantity,Multiplies the P.E. class count by three even though it is a separate class.
+tuned,few_shot,gsm8k/train/05324,False,repetition_no_progress,Repeats a ratio statement until the token cap without giving an answer.
+tuned,few_shot,gsm8k/train/01264,False,wrong_operation_or_quantity,Applies dots per inch only once; needs the factor in each dimension.
+tuned,few_shot,gsm8k/train/01498,False,mixed_arithmetic_and_reasoning,Misbuilds salary/commission/insurance quantities and makes several arithmetic errors.
+tuned,few_shot,gsm8k/train/06861,True,correct_final_answer,Matches reference by treating the two friends as requiring two game purchases; wording is potentially ambiguous.
+tuned,few_shot,gsm8k/train/03355,False,mixed_arithmetic_and_reasoning,States 3/4 times 8000 = 24000 and omits the required successive volume changes.
+tuned,few_shot,gsm8k/train/06924,False,wrong_operation_or_quantity,Answers the female third instead of the remaining male contestants.
+tuned,few_shot,gsm8k/train/02783,False,mixed_arithmetic_and_reasoning,Confuses chair/table/plate costs and makes inconsistent calculations.
+tuned,few_shot,gsm8k/train/04578,False,wrong_operation_or_quantity,Calculates three two-week payments but labels the result as three weeks.
+tuned,few_shot,gsm8k/train/06377,False,wrong_operation_or_quantity,Uses second-day count for the third-day increase and does not subtract all picked apples.
+tuned,few_shot,gsm8k/train/05605,False,wrong_operation_or_quantity,Does not align current ages with the two-years-ago relationship.
+tuned,few_shot,gsm8k/train/02789,False,wrong_operation_or_quantity,Does not use total required score minus the first three scores.
+tuned,few_shot,gsm8k/train/04368,False,mixed_arithmetic_and_reasoning,Uses a wrong perimeter construction and an incorrect compound calculation.
+tuned,few_shot,gsm8k/train/06731,False,wrong_operation_or_quantity,Subtracts the age difference and omits the four elapsed years.
+tuned,few_shot,gsm8k/train/05535,False,mixed_arithmetic_and_reasoning,Sums the children incorrectly and divides by ages rather than two classes.
+tuned,few_shot,gsm8k/train/06875,False,wrong_operation_or_quantity,Confuses fat-per-fish quantities and omits forty fish of each type.
+tuned,few_shot,gsm8k/train/04959,False,mixed_arithmetic_and_reasoning,Computes 2/5 of 35 incorrectly and reports written rather than remaining questions.
+tuned,few_shot,gsm8k/train/05001,False,wrong_operation_or_quantity,Subtracts the daily revenues instead of adding them.
+tuned,few_shot,gsm8k/train/02436,False,wrong_operation_or_quantity,Confuses brochure capacity per box with the number of boxes.
+tuned,few_shot,gsm8k/train/04522,False,wrong_operation_or_quantity,Computes apartment count but omits three keys per lock.
+tuned,few_shot,gsm8k/train/05242,False,arithmetic_error,"Correct setup through 12 and 36, then states 12 + 36 = 50."
+tuned,few_shot,gsm8k/train/05570,False,arithmetic_error,"Correct products 90 and 100, then states their sum is 290."
+tuned,few_shot,gsm8k/train/06242,False,mixed_arithmetic_and_reasoning,"Mixes daily/weekly units, omits quart conversion, and states 140 times 7 = 1080."
+tuned,few_shot,gsm8k/train/00157,False,wrong_operation_or_quantity,Does not reverse the final doubling and solve for removed beads.
+tuned,few_shot,gsm8k/train/03174,False,mixed_arithmetic_and_reasoning,Subtracts the fraction directly from counts and makes incorrect fraction calculations.
+tuned,few_shot,gsm8k/train/00752,False,wrong_operation_or_quantity,Treats area/length relation as a simple division and answers an incorrect width.
+tuned,few_shot,gsm8k/train/02675,False,wrong_operation_or_quantity,Correctly computes Jason's coins but does not add both boys' amounts.
+tuned,few_shot,gsm8k/train/02100,True,correct_final_answer,Correct numeric change; incorrectly calls the change the total snack cost in the final prose.
+tuned,few_shot,gsm8k/train/02019,False,wrong_operation_or_quantity,Does not reconstruct Alma's age and both friends' total before deriving test points.
+tuned,few_shot,gsm8k/train/01781,False,mixed_arithmetic_and_reasoning,"Incorrect sales products, remaining inventory, and profit construction."
+tuned,few_shot,gsm8k/train/05080,False,mixed_arithmetic_and_reasoning,Confuses which earnings are reduced and mishandles fractions/savings.
+tuned,few_shot,gsm8k/train/00625,True,correct_final_answer,Correct doubled back-store count and total.
+tuned,few_shot,gsm8k/train/06891,False,wrong_operation_or_quantity,Reports only the last individual catch contribution and omits aggregation/discards.
+tuned,few_shot,gsm8k/train/06771,False,repetition_no_progress,Repeats the daily pull-up count until the token cap.
+tuned,few_shot,gsm8k/train/02063,False,wrong_operation_or_quantity,Omits the return throws required by the reference interpretation.
+tuned,few_shot,gsm8k/train/06816,False,wrong_operation_or_quantity,Misassigns the given duration and double counts the routine.
+tuned,few_shot,gsm8k/train/06055,False,mixed_arithmetic_and_reasoning,Reverses the reading relationship and makes incorrect calculations; omits the requested difference.
+tuned,few_shot,gsm8k/train/02539,False,wrong_operation_or_quantity,Does not convert the avoided six-dollar expense into a percentage of fifteen.
+tuned,few_shot,gsm8k/train/05871,False,mixed_arithmetic_and_reasoning,Omits one child's haircut and calculates the resulting tip incorrectly.
+tuned,few_shot,gsm8k/train/03300,True,correct_final_answer,Correct intermediate Ivory count and doubling for Taso.
+tuned,few_shot,gsm8k/train/02811,False,wrong_operation_or_quantity,"Misapplies successive fractions, sale counts, and the final remaining total."
