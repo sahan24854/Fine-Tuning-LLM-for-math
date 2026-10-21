@@ -1,0 +1,14 @@
+{
+  "analysis_id": "gsm8k-validation-error-analysis-1",
+  "scope": "validation_only_development_not_final_test",
+  "questions": 50,
+  "max_questions": 50,
+  "seed": 42,
+  "modes": ["zero_shot", "few_shot"],
+  "batch_size": 4,
+  "scoring_protocol_file": "configs/protocol_v2_diagnostic.json",
+  "scoring_protocol_file_sha256": "4d77fba5c341764d1d0a3b5d5f62ce115d20ef25d154a9b7468f33efa3bac1cb",
+  "selection": "Lowest SHA-256 ranks of seed and original validation ID, without inspecting correctness.",
+  "interpretation": "These questions were excluded from gradient training but used for validation-loss checkpoint selection. This is development diagnosis, not an untouched holdout.",
+  "automatic_flags": "Formatting, cap hits, repetition, and exact numeric equality checks on whole lines only. Reasoning categories require human review. No answer repair or rescoring."
+}

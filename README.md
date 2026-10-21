@@ -2,7 +2,7 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Current step: [Notebook 04: paired comparison](notebooks/04_paired_comparison.ipynb).** Import it into a new Kaggle notebook, enable Internet and a T4, and attach the saved outputs from Notebook 01, Notebook 02c, and Notebook 03. It verifies the original artifacts, generates 300 adapter answers on the saved pilot questions, and compares accuracy, formatting, paired changes, and exploratory arithmetic evidence. See [the comparison guide](docs/paired-comparison.md).
+**Current step: [Notebook 05: validation error analysis](notebooks/05_validation_error_analysis.ipynb).** Import into a new Kaggle notebook, enable Internet and a T4, and attach the original Notebook 01 and completed Notebook 03 saved outputs. It compares both models with zero-shot/three-shot prompts on 50 fixed validation questions (200 predictions total), displays reference solutions and review flags, and prepares evidence for a controlled second experiment. No new training or test evaluation runs. See [the diagnostic guide](docs/validation-error-analysis.md).
 
 **Completed comparison:** Notebook 04 ran successfully. Official accuracy changed from 5% to 8% on GSM8K, 20% to 12% on SVAMP, and 4% to 54% on arithmetic. The exploratory arithmetic answer-evidence count changed from 51 to 54, showing that much of the official arithmetic gain reflects better answer formatting. Read [the comparison review](docs/comparison-review-2026-10-21.md) before claiming improved maths ability.
 
