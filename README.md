@@ -2,7 +2,9 @@
 
 Measure `HuggingFaceTB/SmolLM2-360M` before and after LoRA fine-tuning on maths problems. The new experiment starts with **[Notebook 01: data and protocol](notebooks/01_data_and_protocol.ipynb)**. The original Qwen/Kaggle notebooks remain as historical experiments.
 
-**Current step: run [Notebook 06](notebooks/06_lower_lr_with_epoch_validation.ipynb), the controlled lower-learning-rate trial with epoch accuracy monitoring.** Attach the saved Notebook 01 and Notebook 05 outputs; see the [run guide](docs/lower-learning-rate-trial.md). This new experiment is implemented but has not yet been run on Kaggle.
+**Current step: run [Notebook 07](notebooks/07_inference_check_and_balanced_data.ipynb), the inference-path diagnostic and balanced-data preparation.** Attach only the original Notebook 01 output; enable Internet and a T4. Read the [run guide and experiment limits](docs/balanced-data-preparation.md). This stage prepares a data variant and generates 200 validation predictions, with no fine-tuning.
+
+**Notebook 06 completed:** the lower-rate adapter scored 3/50, versus 6/50 for the first adapter. All uploaded generated predictions were independently checked. Two repeated baseline answers differ while remaining incorrect. Read the [artifact review](docs/lower-lr-review-2026-10-22.md). Keep both adapters; the next data intervention is a hypothesis, not an established improvement.
 
 **Prior validation findings:** [Notebook 05](notebooks/05_validation_error_analysis.ipynb) completed all 200 predictions. With three-shot prompting, original accuracy is 5/50 and first-adapter accuracy is 6/50; the adapter gives 48 parseable answers but still makes many setup/calculation errors. Read [the validation review and proposed experiment](docs/validation-review-2026-10-21.md) and [manual annotations](docs/validation-review-2026-10-21.csv). The diagnostic and its [run guide](docs/validation-error-analysis.md) remain available for reproducibility.
 

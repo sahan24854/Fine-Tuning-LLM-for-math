@@ -1,0 +1,10 @@
+{
+  "experiment_id": "elementary-balanced-mixture-v1",
+  "seed": 1729,
+  "synthetic_train_rows": 1680,
+  "diagnostic_rows_per_skill": 20,
+  "skills": ["add", "subtract", "equal_groups", "divide", "two_step_total", "two_step_remaining"],
+  "mixture_policy": "Replace 1680 original training rows; retain all fixed demonstrations. Preserve total training row count.",
+  "budget_policy": "Same epochs, effective batch size and optimizer-update count. Supervised token exposure is measured, not matched.",
+  "evaluation_policy": "Original validation/test files and demonstrations stay byte-identical. New synthetic diagnostic uses held-out wording and numerical tuples; it is development data, not final test evidence."
+}
